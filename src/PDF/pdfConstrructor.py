@@ -1,6 +1,27 @@
 '''PDF constructor file'''
 
 from fpdf import FPDF
+import datetime
+
+#dates
+now = datetime.datetime.now()
+year = now.year
+month = {
+    1:'Jan',
+    2:'Fev',
+    3:'Mar',
+    4:'Apr',
+    5:'May',
+    6:'Jun',
+    7:'Jul',
+    8:'Aug',
+    9:'Sep',
+    10:'Oct',
+    11:'Nov',
+    12:'Dec'
+}
+
+date = f'{month[now.month]} {year}'
 
 #document variables
 pdf_w = 210
@@ -11,7 +32,7 @@ margin_l = 5
 #pdf constructor
 class PDF(FPDF):
     
-    def top(self, date):
+    def top(self):
 
         self.set_y(20)
         self.set_text_color(255, 255, 255)
@@ -137,5 +158,5 @@ pdf = PDF(
 )
 
 #add font
-pdf.add_font('gilroy', '', "./src/assets/fonts/Gilroy-Light.ttf", uni=True)
-pdf.add_font('gilroy-bold', '', "./src/assets/fonts/Gilroy-ExtraBold.ttf", uni=True)
+pdf.add_font('gilroy', '', r"../src/assets/fonts/Gilroy-Light.ttf", uni=True)
+pdf.add_font('gilroy-bold', '', r"../src/assets/fonts/Gilroy-ExtraBold.ttf", uni=True)

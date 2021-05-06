@@ -1,17 +1,11 @@
-from PDF.teste_page import pdf
+from PDF.pdfConstrructor import pdf
 
 
-def GenPdf(output):
-
-    pdf = PDF(
-        orientation='P', 
-        unit='mm', 
-        format='A4'
-    )
+def GenPdf():
 
     pdf.add_page()
 
-    pdf.top('Jun 2021')
+    pdf.top()
     pdf.issued(25)
     pdf.mia(10)
     pdf.fabric(fabric=['G1325', 'Boston toffee'])
@@ -19,4 +13,9 @@ def GenPdf(output):
 
     pdf.add_page()
 
-    pdf.output(output, 'F')
+    pdf.output(r'./temp_reports/testes.pdf', 'F')
+
+
+if __name__ == '__main__':
+    print('PDF as been saved...')
+    GenPdf()
