@@ -21,7 +21,7 @@ month = {
     12:'Dec'
 }
 
-date = f'{month[now.month]} {year}'
+date = f'{month[now.month - 1]} {year}'
 
 #document variables
 pdf_w = 210

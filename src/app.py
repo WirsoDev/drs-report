@@ -1,4 +1,9 @@
 from PDF.pdfConstrructor import pdf
+from dataCollector.datacollector import DataCollector
+
+
+data = DataCollector()
+drs_issued = data.getMonthDrsNumber()
 
 
 def GenPdf():
@@ -6,7 +11,7 @@ def GenPdf():
     pdf.add_page()
 
     pdf.top()
-    pdf.issued(25)
+    pdf.issued(drs_issued)
     pdf.mia(10)
     pdf.fabric(fabric=['G1325', 'Boston toffee'])
     pdf.top_five()
@@ -17,5 +22,8 @@ def GenPdf():
 
 
 if __name__ == '__main__':
-    print('PDF as been saved...')
-    GenPdf()
+    #Debuginggggg!
+
+    #for key, values in drs_issued.items():
+    #   print(key, values['tipologia'])
+    print(drs_issued)
