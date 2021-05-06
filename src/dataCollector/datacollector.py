@@ -39,11 +39,14 @@ class DataCollector:
     
 
     def getAllDrsValues(self):
+        '''Return DIC of all DRS (past month)'''
         return self.current_mounth_drs
 
+
     def getMonthDrsNumber(self):
+        '''Return nunber of all DRS (past month)'''
         return len(self.current_mounth_drs)
             
-            
+                
 
 

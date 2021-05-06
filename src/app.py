@@ -3,7 +3,7 @@ from dataCollector.datacollector import DataCollector
 
 
 data = DataCollector()
-drs_issued = data.getMonthDrsNumber()
+drs_issued = data.getAllDrsValues()
 
 
 def GenPdf():
