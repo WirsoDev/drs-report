@@ -2,8 +2,8 @@ from PDF.pdfConstrructor import pdf
 from dataCollector.datacollector import DataCollector
 
 
-data = DataCollector()
-drs_issued = data.getAllDrsValues()
+data = DataCollector(isGlobal=True)
+drs_issued = data.getCategory(IsSorted=True)
 
 
 def GenPdf():
