@@ -1,24 +1,5 @@
-from PDF.pdfConstrructor import pdf
-from dataCollector.datacollector import DataCollector
+from _email.sendemail import sendemail
 
-
-data = DataCollector(isGlobal=True)
-drs_issued = data.getCategory(IsSorted=True)
-
-
-def GenPdf():
-
-    pdf.add_page()
-
-    pdf.top()
-    pdf.issued(drs_issued)
-    pdf.mia(10)
-    pdf.fabric(fabric=['G1325', 'Boston toffee'])
-    pdf.top_five()
-
-    pdf.add_page()
-
-    pdf.output(r'./temp_reports/testes.pdf', 'F')
 
 
 if __name__ == '__main__':
@@ -26,4 +7,5 @@ if __name__ == '__main__':
 
     #for key, values in drs_issued.items():
     #   print(key, values['tipologia'])
-    print(drs_issued)
+    sendemail()
+    

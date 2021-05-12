@@ -1,5 +1,15 @@
-import plotly.express as px
-data_canada = px.data.gapminder().query("country == 'Canada'")
-print(type(data_canada))
-fig = px.bar(data_canada, x='year', y='pop')
-#fig.show()
+import pandas as pd
+pd.options.plotting.backend = "plotly"
+
+#data
+
+data = {'Portugal': [3], 'Spain': [4]}
+
+df = pd.DataFrame.from_dict(data, orient='index',
+                        columns=['VALUE'])
+
+
+#ploting
+fig = df.plot.bar(x='VALUE')
+fig.show()
+fig.
