@@ -22,10 +22,10 @@ def sendemail():
     EMAIL_PASS = os.environ.get('EMAIL_PASS')
 
     msg = EmailMessage()
-    msg['Subject'] = 'Hello World'
+    msg['Subject'] = 'DRS Report'
     msg['From'] = 'Drs Reports'
     msg['To'] = subjects
-    msg.set_content('Hello World')
+    msg.set_content('DRS Reports')
     msg.add_alternative(ht.read(), subtype='html')
 
 
