@@ -1,5 +1,5 @@
-from _email.sendemail import sendemail
-from PLOTS.plots import models
+from typing import Tuple
+from PLOTS.plots import main
 
 
 
@@ -8,5 +8,5 @@ if __name__ == '__main__':
 
     #for key, values in drs_issued.items():
     #   print(key, values['tipologia'])
-    models()
+    main()
     
