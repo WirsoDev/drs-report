@@ -29,4 +29,4 @@ def sendemail():
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(user=EMAIL_ADD, password=EMAIL_PASS)
         smtp.send_message(msg)
-        print('Message send!')
+        print(f'Email send to: {subjects}')

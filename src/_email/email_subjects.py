@@ -1,8 +1,6 @@
 subjects = [
     'wilson.wmarques@gmail.com',
-    'wilson.marques@aquinos.pt'
     ]
-
 
 '''
 subjects = [

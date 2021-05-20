@@ -7,6 +7,7 @@ def get_email_data():
 
     #get data
     data = DataCollector()
+    print('Collecting DRS data...')
     drs_total = data.getDrsNumber()
     mias_total = data.getIsMia()
 
@@ -64,9 +65,7 @@ def get_email_data():
         'drs_total':drs_total,
         'mias_total':mias_total
     }
-
-    print(email_data)
-
+    print('Data collection - DONE')
     return email_data
 
 
@@ -131,7 +130,6 @@ def gen_email():
 /* IMPORTANT THIS STYLES MUST BE ON FINAL EMAIL */
 #outlook a {{
     padding: 0;
-    margin: 0;
 }}
 
 .es-button {{
@@ -1325,5 +1323,6 @@ button.es-button {{
 
     with open(r'./_email/temp_files/email.html', 'w') as file:
             file.write(html)
+            print('-------------------')
             print('email.html updated')
     
