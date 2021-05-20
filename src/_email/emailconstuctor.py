@@ -1,6 +1,8 @@
 import datetime
 from openpyxl import load_workbook
 from dataCollector.datacollector import DataCollector
+from PLOTS.plots import main as plot_main
+from PLOTS.uploadimg import plots_urls
 
 
 def get_email_data():
@@ -10,6 +12,7 @@ def get_email_data():
     print('Collecting DRS data...')
     drs_total = data.getDrsNumber()
     mias_total = data.getIsMia()
+    nome_modelo = data.getModels(IsSorted=True)
 
     #get most requested and top 5
     fabrics =  data.getFabrics(IsSorted=True)
@@ -20,6 +23,8 @@ def get_email_data():
     for x, y in enumerate(fabrics):
         if x < 6 and x > 0:
             top_5.append(y[0])
+
+    top_5_edit = f'{top_5[0]} | {top_5[1]} | {top_5[2]} | {top_5[3]} | {top_5[4]}'
 
     #get name of most requested fabric
     file = load_workbook(filename=r'./assets/TC_02.xlsx')
@@ -58,18 +63,25 @@ def get_email_data():
     
     file.close()
 
+    #create plots
+    plot_main()
+    plots = plots_urls()
+
     email_data = {
         'most_req_fabric':most_req_fabric,
-        'top_5':top_5,
+        'top_5':top_5_edit,
         'fabric_name':fabric_name,
         'drs_total':drs_total,
-        'mias_total':mias_total
+        'mias_total':mias_total,
+        'nome_modelo':nome_modelo,
+        'plot_url':plots
     }
     print('Data collection - DONE')
     return email_data
 
 
 def gen_email():
+
     #dates
     now = datetime.datetime.now()
     year = now.year
@@ -97,7 +109,7 @@ def gen_email():
 
     html =f'''
 
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
@@ -124,8 +136,9 @@ def gen_email():
     <!--[if !mso]><!-- -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i" rel="stylesheet">
     <!--<![endif]-->
-
     <style>
+
+
         /* CONFIG STYLES Please do not delete and edit CSS styles below */
 /* IMPORTANT THIS STYLES MUST BE ON FINAL EMAIL */
 #outlook a {{
@@ -959,6 +972,8 @@ button.es-button {{
 }}
 
 /* END RESPONSIVE STYLES */
+
+
     </style>
 </head>
 
@@ -980,7 +995,7 @@ button.es-button {{
                                         <table class="es-header-body" width="650" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center">
                                             <tbody>
                                                 <tr>
-                                                    <td class="esd-structure es-p20r es-p20l" align="left" bgcolor="#ffffff" style="background-color: #ffffff;">
+                                                    <td class="esd-structure es-p20r es-p20l" align="left" bgcolor="#666666" style="background-color: #666666;">
                                                         <table cellspacing="0" cellpadding="0" width="100%">
                                                             <tbody>
                                                                 <tr>
@@ -988,9 +1003,48 @@ button.es-button {{
                                                                         <table width="100%" cellspacing="0" cellpadding="0">
                                                                             <tbody>
                                                                                 <tr>
-                                                                                    <td align="right" class="esd-block-text es-m-txt-c es-p40 es-m-p10">
-                                                                                        <h1 style="color: #000000; font-size: 72px; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif; line-height: 120%;"><strong>DRS</strong></h1>
-                                                                                        <h1 style="color: #000000; font-size: 40px; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif; line-height: 120%;">reports</h1><span style="font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif; font-size: 20px; line-height: 120%;">{date}</span>
+                                                                                    <td align="center" class="esd-block-text es-m-txt-c es-p40 es-m-p10">
+                                                                                        <h1 style="color: #ffffff; font-size: 72px; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif; line-height: 120%;"><strong>DRS</strong></h1>
+                                                                                        <h1 style="color: #ffffff; font-size: 40px; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif; line-height: 120%;">reports</h1><span style="color: #ffffff; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif; font-size: 20px; line-height: 120%;">{date}</span>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table cellpadding="0" cellspacing="0" class="es-content" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="esd-structure es-p20r es-p20l" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="610" class="esd-container-frame" align="center" valign="top">
+                                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center" class="esd-block-spacer es-p5" style="font-size:0">
+                                                                                        <table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td style="border-bottom: 1px solid #cccccc; background:none; height:1px; width:100%; margin:0px 0px 0px 0px;"></td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -1014,7 +1068,7 @@ button.es-button {{
                                         <table class="es-content-body" width="650" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center">
                                             <tbody>
                                                 <tr>
-                                                    <td class="esd-structure es-p10t es-p20b es-p20r es-p20l" align="left" bgcolor="#E5ECF6" style="background-color: #e5ecf6;">
+                                                    <td class="esd-structure es-p10t es-p20b es-p20r es-p20l" align="left">
                                                         <!--[if mso]><table width="610" cellpadding="0" cellspacing="0"><tr><td width="295" valign="top"><![endif]-->
                                                         <table cellspacing="0" cellpadding="0" align="left" class="es-left">
                                                             <tbody>
@@ -1023,9 +1077,9 @@ button.es-button {{
                                                                         <table width="100%" cellspacing="0" cellpadding="0">
                                                                             <tbody>
                                                                                 <tr>
-                                                                                    <td align="left" class="esd-block-text">
-                                                                                        <h1 style="font-size: 70px; line-height: 120%; color: #ffffff; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif;"><strong>{data['drs_total']}</strong></h1>
-                                                                                        <h3 style="font-size: 70px; line-height: 120%; color: #ffffff; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif;"><strong><span style="font-size: 20px; line-height: 120%;">TOTAL ISSUED</span></strong></h3>
+                                                                                    <td align="center" class="esd-block-text">
+                                                                                        <h1 style="font-size: 70px; line-height: 120%; color: #000000; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif;"><strong>{data['drs_total']}</strong></h1>
+                                                                                        <h3 style="font-size: 70px; line-height: 120%; color: #000000; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif;"><strong><span style="font-size: 20px; line-height: 120%;">TOTAL ISSUED</span></strong></h3>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -1042,9 +1096,9 @@ button.es-button {{
                                                                         <table width="100%" cellspacing="0" cellpadding="0">
                                                                             <tbody>
                                                                                 <tr>
-                                                                                    <td align="right" class="esd-block-text">
-                                                                                        <h1 style="font-size: 70px; line-height: 120%; color: #ffffff; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif;"><b>{data['mias_total']}</b></h1>
-                                                                                        <h3 style="font-size: 20px; line-height: 120%; color: #ffffff; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif;"><strong>MIA'S</strong></h3>
+                                                                                    <td align="center" class="esd-block-text">
+                                                                                        <h1 style="font-size: 70px; line-height: 120%; color: #000000; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif;"><b>{data['mias_total']}</b></h1>
+                                                                                        <h3 style="font-size: 20px; line-height: 120%; color: #000000; font-family: roboto, 'helvetica neue', helvetica, arial, sans-serif;"><strong>MIA'S</strong></h3>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -1069,7 +1123,46 @@ button.es-button {{
                                         <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
                                             <tbody>
                                                 <tr>
-                                                    <td class="esd-structure es-p25t es-p20b es-p20r es-p20l" align="left" bgcolor="#656262" style="background-color: #656262;">
+                                                    <td class="esd-structure es-p20r es-p20l" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="610" class="esd-container-frame" align="center" valign="top">
+                                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center" class="esd-block-spacer es-p5" style="font-size:0">
+                                                                                        <table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td style="border-bottom: 1px solid #cccccc; background:none; height:1px; width:100%; margin:0px 0px 0px 0px;"></td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table cellpadding="0" cellspacing="0" class="es-content" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="esd-structure es-p25t es-p20b es-p20r es-p20l" align="left">
                                                         <!--[if mso]><table width="610" cellpadding="0" cellspacing="0"><tr><td width="271" valign="top"><![endif]-->
                                                         <table cellpadding="0" cellspacing="0" align="left" class="es-left">
                                                             <tbody>
@@ -1078,8 +1171,8 @@ button.es-button {{
                                                                         <table cellpadding="0" cellspacing="0" width="100%">
                                                                             <tbody>
                                                                                 <tr>
-                                                                                    <td align="left" class="esd-block-text">
-                                                                                        <h1 style="line-height: 120%; color: #ffffff;"><strong>Most requested fabric</strong></h1>
+                                                                                    <td align="center" class="esd-block-text">
+                                                                                        <h1 style="line-height: 120%; color: #000000;"><strong>Most requested fabric</strong></h1>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -1096,13 +1189,13 @@ button.es-button {{
                                                                         <table cellpadding="0" cellspacing="0" width="100%">
                                                                             <tbody>
                                                                                 <tr>
-                                                                                    <td align="right" class="esd-block-text">
-                                                                                        <h1 style="font-size: 45px; color: #ffffff;"><strong>{data['most_req_fabric']}</strong></h1>
+                                                                                    <td align="center" class="esd-block-text">
+                                                                                        <h1 style="font-size: 45px; color: #000000;"><strong>{data['most_req_fabric']}</strong></h1>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td align="right" class="esd-block-text">
-                                                                                        <h3 style="font-size: 15px; color: #ffffff;">{data['fabric_name']}</h3>
+                                                                                    <td align="center" class="esd-block-text">
+                                                                                        <h3 style="font-size: 15px; color: #000000;">{data['fabric_name']}</h3>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -1127,17 +1220,22 @@ button.es-button {{
                                         <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
                                             <tbody>
                                                 <tr>
-                                                    <td class="esd-structure es-p20t es-p15b es-p20r es-p20l" align="left" bgcolor="#b9b8b8" style="background-color: #b9b8b8;">
-                                                        <!--[if mso]><table width="610" cellpadding="0" cellspacing="0"><tr><td width="196.66666666666666" valign="top"><![endif]-->
-                                                        <table cellpadding="0" cellspacing="0" class="es-left" align="left">
+                                                    <td class="esd-structure es-p20r es-p20l" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
                                                             <tbody>
                                                                 <tr>
-                                                                    <td width="196.66666666666666" class="es-m-p0r es-m-p20b esd-container-frame" valign="top" align="center">
+                                                                    <td width="610" class="esd-container-frame" align="center" valign="top">
                                                                         <table cellpadding="0" cellspacing="0" width="100%">
                                                                             <tbody>
                                                                                 <tr>
-                                                                                    <td align="left" class="esd-block-text es-m-txt-c">
-                                                                                        <h2 style="color: #ffffff;"><strong>TOP 5 Fabrics<span style="font-family:roboto,'helvetica neue',helvetica,arial,sans-serif;"></span></strong></h2>
+                                                                                    <td align="center" class="esd-block-spacer es-p5" style="font-size:0">
+                                                                                        <table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td style="border-bottom: 1px solid #cccccc; background:none; height:1px; width:100%; margin:0px 0px 0px 0px;"></td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -1146,25 +1244,6 @@ button.es-button {{
                                                                 </tr>
                                                             </tbody>
                                                         </table>
-                                                        <!--[if mso]></td><td width="20"></td><td width="393.3333333333333" valign="top"><![endif]-->
-                                                        <table cellpadding="0" cellspacing="0" align="right">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td width="393.3333333333333" align="left" class="esd-container-frame">
-                                                                        <table cellpadding="0" cellspacing="0" width="100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td align="right" class="esd-block-text es-m-txt-c">
-                                                                                        <h4 style="color: #ffffff;"><strong>C2154 | C2578 | C2547 | C5478</strong></h4>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        <!--[if mso]></td></tr></table><![endif]-->
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -1180,7 +1259,79 @@ button.es-button {{
                                         <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
                                             <tbody>
                                                 <tr>
-                                                    <td class="es-p20t es-p20r es-p20l esd-structure" align="left">
+                                                    <td class="esd-structure es-p5t es-p5b es-p20r es-p20l" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="609" align="left" class="esd-container-frame">
+                                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center" class="esd-block-text es-m-txt-c">
+                                                                                        <h2 style="color: #000000; line-height: 150%;"><strong>{data['top_5']}</strong></h2>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table cellpadding="0" cellspacing="0" class="es-content" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="esd-structure es-p20r es-p20l" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="610" class="esd-container-frame" align="center" valign="top">
+                                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center" class="esd-block-spacer es-p5" style="font-size:0">
+                                                                                        <table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td style="border-bottom: 1px solid #cccccc; background:none; height:1px; width:100%; margin:0px 0px 0px 0px;"></td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table cellpadding="0" cellspacing="0" class="es-content" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="esd-structure es-p20r es-p20l" align="left">
                                                         <table cellpadding="0" cellspacing="0" width="100%">
                                                             <tbody>
                                                                 <tr>
@@ -1192,7 +1343,7 @@ button.es-button {{
                                                                                         <table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
                                                                                             <tbody>
                                                                                                 <tr>
-                                                                                                    <td style="border-bottom: 1px solid #cccccc; background:none; height:1px; width:100%; margin:0px 0px 0px 0px;"></td>
+                                                                                                    <td style="border-bottom: 35px solid #666666; background: none; height: 1px; width: 100%; margin: 0px;"></td>
                                                                                                 </tr>
                                                                                             </tbody>
                                                                                         </table>
@@ -1228,7 +1379,7 @@ button.es-button {{
                                                                             <tbody>
                                                                                 <tr>
                                                                                     <td align="center" class="esd-block-text">
-                                                                                        <h1><strong>Most requested family elements</strong></h1>
+                                                                                        <h1><strong>Top 5 models</strong></h1>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
@@ -1260,7 +1411,7 @@ button.es-button {{
                                                                         <table cellpadding="0" cellspacing="0" width="100%">
                                                                             <tbody>
                                                                                 <tr>
-                                                                                    <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank"><img class="adapt-img" src="https://piqiiz.stripocdn.email/content/guids/CABINET_ae8f323c877c2d8f0a0aee0271e9d3c7/images/63691621010522374.jpg" alt style="display: block;" width="500"></a></td>
+                                                                                    <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank"><img class="adapt-img" src="{data['plot_url'][4]}" alt style="display: block;" width="600"></a></td>
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>
@@ -1276,6 +1427,266 @@ button.es-button {{
                                 </tr>
                             </tbody>
                         </table>
+                        <table cellpadding="0" cellspacing="0" class="es-content" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="es-p20t es-p20r es-p20l esd-structure" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="610" class="esd-container-frame" align="center" valign="top">
+                                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center" class="esd-block-text">
+                                                                                        <h1><strong>Categories</strong></h1>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table cellpadding="0" cellspacing="0" class="es-content" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="es-p20t es-p20r es-p20l esd-structure" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="610" class="esd-container-frame" align="center" valign="top">
+                                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank"><img class="adapt-img" src="{data['plot_url'][0]}" alt style="display: block;" width="600"></a></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                           <table cellpadding="0" cellspacing="0" class="es-content" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="es-p20t es-p20r es-p20l esd-structure" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="610" class="esd-container-frame" align="center" valign="top">
+                                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center" class="esd-block-text">
+                                                                                        <h1><strong>Families</strong></h1>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table cellpadding="0" cellspacing="0" class="es-content" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="es-p20t es-p20r es-p20l esd-structure" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="610" class="esd-container-frame" align="center" valign="top">
+                                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank"><img class="adapt-img" src="{data['plot_url'][3]}" width="600"></a></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table cellpadding="0" cellspacing="0" class="es-content" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="es-p20t es-p20r es-p20l esd-structure" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="610" class="esd-container-frame" align="center" valign="top">
+                                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center" class="esd-block-text">
+                                                                                        <h1><strong>Type of request</strong></h1>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table cellpadding="0" cellspacing="0" class="es-content" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="es-p20t es-p20r es-p20l esd-structure" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="610" class="esd-container-frame" align="center" valign="top">
+                                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank"><img class="adapt-img" src="{data['plot_url'][2]}" alt style="display: block;" width="600"></a></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table cellpadding="0" cellspacing="0" class="es-content" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="es-p20t es-p20r es-p20l esd-structure" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="610" class="esd-container-frame" align="center" valign="top">
+                                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center" class="esd-block-text">
+                                                                                        <h1><strong>Markets</strong></h1>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table cellpadding="0" cellspacing="0" class="es-content" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table bgcolor="#ffffff" class="es-content-body" align="center" cellpadding="0" cellspacing="0" width="650">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="es-p20t es-p20r es-p20l esd-structure" align="left">
+                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="610" class="esd-container-frame" align="center" valign="top">
+                                                                        <table cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank"><img class="adapt-img" src="{data['plot_url'][1]}" alt style="display: block;" width="600"></a></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
                         <table class="esd-footer-popover es-footer" cellspacing="0" cellpadding="0" align="center">
                             <tbody>
                                 <tr>

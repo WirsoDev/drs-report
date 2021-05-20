@@ -19,7 +19,7 @@ def sendemail():
     EMAIL_PASS = os.environ.get('EMAIL_PASS')
 
     msg = EmailMessage()
-    msg['Subject'] = 'DRS Reports | test email - dummy data'
+    msg['Subject'] = 'DRS Reports'
     msg['From'] = 'Drs Reports | Design e Comunicação'
     msg['To'] = subjects
     msg.set_content('DRS Reports')

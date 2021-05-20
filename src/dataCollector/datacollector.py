@@ -240,6 +240,39 @@ class DataCollector:
             return dic_sorted 
         else:
             return  tipos_dic
+
+    
+    def getModels(self, IsSorted=False):
+        ''' Get all markets 
+            return: DIC {tipo:qnt} '''
+
+        data = self.current_mounth_drs
+
+        tipos = []
+        tipos_dic = {}
+        for key, values in data.items():
+            tipo = values['nome_modelo']
+            if tipo:
+                xtipo = tipo.split(',')
+                for j in xtipo:
+                    if len(j) > 1:
+                        tipos.append(j.strip())
+                    
+        for tip in tipos:
+            y = {
+                tip:0
+            }
+            tipos_dic.update(y)
+        
+        for x in tipos:
+            tipos_dic[x] += 1
+    
+
+        if IsSorted:
+            dic_sorted = sorted(tipos_dic.items(), key=lambda x: x[1], reverse=True)
+            return dic_sorted 
+        else:
+            return  tipos_dic
             
                 
 

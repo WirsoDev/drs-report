@@ -1,12 +1,8 @@
 subjects = [
     'wilson.wmarques@gmail.com',
-    ]
-
-'''
-subjects = [
-    'wilson.wmarques@gmail.com',
     'wilson.marques@aquinos.pt',
     'jennifer.ferreira@aquinos.pt',
-    'jennifer.ferreira.91@gmail.com'
+    'catia.sa@aquinos.pt',
+    'sandro.barbosa@aquinos.pt',
+    'daniela.ventura@aquinos.pt'
     ]
-'''
