@@ -21,8 +21,8 @@ def markets(data):
     fig.update_traces(texttemplate=y, textposition='inside')
     fig.update_layout(uniformtext_minsize=2, uniformtext_mode='hide', font=dict(
         family="Courier New, monospace",
-        size=18,
-        color="RebeccaPurple"
+        size=8,
+        color="Black"
     ))
 
     #ploting and save images
@@ -44,7 +44,7 @@ def categories(data):
     fig.update_traces(texttemplate=y, textposition='inside')
     fig.update_layout(uniformtext_minsize=2, uniformtext_mode='hide', font=dict(
         family="Courier New, monospace",
-        size=6,
+        size=8,
         color="Black"
     ))
     #ploting and save images
@@ -64,7 +64,11 @@ def requesttype(data):
     fig = px.bar(x=x, y=y)
 
     fig.update_traces(texttemplate=y, textposition='inside')
-    fig.update_layout(uniformtext_minsize=2, uniformtext_mode='hide')
+    fig.update_layout(uniformtext_minsize=2, uniformtext_mode='hide', font=dict(
+        family="Courier New, monospace",
+        size=8,
+        color="Black"
+    ))
     #ploting and save images
 
     fig.write_image('./PLOTS/img/request_type.jpg', width=700, height=350, scale=6)
@@ -74,7 +78,9 @@ def requesttype(data):
 
 def main(isglobal:bool = False):
     data = DataCollector(isglobal)
+    print('data generated...')
     markets(data)
     categories(data)
     requesttype(data)
+    print('Poling done!')
     

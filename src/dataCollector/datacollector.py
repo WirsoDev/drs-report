@@ -59,8 +59,10 @@ class DataCollector:
                 self.current_mounth_drs.update(new_dic)
 
             x += 1
-    
 
+        file.close()
+        
+    
     def getAllDrsValues(self):
         '''Return DIC of all DRS (past month)'''
         return self.current_mounth_drs

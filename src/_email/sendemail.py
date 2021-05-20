@@ -4,16 +4,13 @@ import os
 from dotenv import load_dotenv
 from .emailconstuctor import gen_email
 from .email_subjects import subjects
-from dataCollector.datacollector import DataCollector
+
+
 
 
 def sendemail():
 
-    data = DataCollector()
-    drs_total = data.getDrsNumber()
-    mias_total = data.getIsMia()
-
-    gen_email(drsnumber=drs_total, miasnumber=mias_total)
+    gen_email()
 
     ht = open('./_email/temp_files/email.html')
 
@@ -22,8 +19,8 @@ def sendemail():
     EMAIL_PASS = os.environ.get('EMAIL_PASS')
 
     msg = EmailMessage()
-    msg['Subject'] = 'DRS Report'
-    msg['From'] = 'Drs Reports'
+    msg['Subject'] = 'DRS Reports | test email - dummy data'
+    msg['From'] = 'Drs Reports | Design e Comunicação'
     msg['To'] = subjects
     msg.set_content('DRS Reports')
     msg.add_alternative(ht.read(), subtype='html')
