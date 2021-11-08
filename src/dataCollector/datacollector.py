@@ -1,6 +1,7 @@
 from openpyxl import load_workbook
 import xlrd
 import datetime
+import re
 
 
 # open the file
@@ -24,7 +25,11 @@ class DataCollector:
             if value == None:
                 break
             str_value = str(value)
-            recived_month = str_value.split('-')[1].replace('0', '')
+            recived_month = str_value.split('-')[1]
+            # remove left 0
+            if recived_month[0] == '0':
+                recived_month = recived_month.replace('0', '')
+
             date = datetime.datetime.now()
             past_month = date.month - 1
             drs_name = f"{self.sheet[f'A{x}'].value}_{str(self.sheet[f'B{x}'].value)}"
@@ -41,22 +46,25 @@ class DataCollector:
                         'categoria':self.sheet[f'I{x}'].value,
                         'mercado':self.sheet[f'J{x}'].value,
                         'revestimentos':self.sheet[f'O{x}'].value,
+                        'cliente':self.sheet[f'K{x}'].value,
                         }}
                 self.current_mounth_drs.update(new_dic)
-
-            if recived_month == str(past_month):
-                new_dic = {drs_name:{
-                        'codigo_modelo': self.sheet[f'C{x}'].value,
-                        'tipologia': self.sheet[f'E{x}'].value,
-                        'tipo_pedido':self.sheet[f'F{x}'].value,
-                        'nome_modelo':self.sheet[f'D{x}'].value,
-                        'empresa':self.sheet[f'G{x}'].value,
-                        'mia':self.sheet[f'H{x}'].value,
-                        'categoria':self.sheet[f'I{x}'].value,
-                        'mercado':self.sheet[f'J{x}'].value,
-                        'revestimentos':self.sheet[f'O{x}'].value,
-                        }}
-                self.current_mounth_drs.update(new_dic)
+            
+            if not isGlobal:
+                if recived_month == str(past_month):
+                    new_dic = {drs_name:{
+                            'codigo_modelo': self.sheet[f'C{x}'].value,
+                            'tipologia': self.sheet[f'E{x}'].value,
+                            'tipo_pedido':self.sheet[f'F{x}'].value,
+                            'nome_modelo':self.sheet[f'D{x}'].value,
+                            'empresa':self.sheet[f'G{x}'].value,
+                            'mia':self.sheet[f'H{x}'].value,
+                            'categoria':self.sheet[f'I{x}'].value,
+                            'mercado':self.sheet[f'J{x}'].value,
+                            'revestimentos':self.sheet[f'O{x}'].value,
+                            'cliente':self.sheet[f'K{x}'].value,
+                            }}
+                    self.current_mounth_drs.update(new_dic)
 
             x += 1
 
@@ -126,6 +134,36 @@ class DataCollector:
         tipos_dic = {}
         for key, values in data.items():
             tipo = values['mercado']
+            if tipo:
+                tipos.append(tipo)
+            
+        for tip in tipos:
+            y = {
+                tip:0
+            }
+            tipos_dic.update(y)
+        
+        for x in tipos:
+            tipos_dic[x] += 1
+
+        if IsSorted:
+            dic_sorted = sorted(tipos_dic.items(), key=lambda x: x[1], reverse=True)
+            return dic_sorted 
+        else:
+            return  tipos_dic
+
+        return tipos_dic
+
+    def getClients(self, IsSorted=False):
+        ''' Get all markets 
+            return: DIC {tipo:qnt} '''
+
+        data = self.current_mounth_drs
+
+        tipos = []
+        tipos_dic = {}
+        for key, values in data.items():
+            tipo = values['cliente']
             if tipo:
                 tipos.append(tipo)
             
@@ -222,7 +260,7 @@ class DataCollector:
             if tipo:
                 xtipo = tipo.split(',')
                 for j in xtipo:
-                    if len(j) > 1:
+                    if len(j) > 1 and re.findall(r"([a-zA-Z]{1}[0-9]{4})", j):
                         tipos.append(j.strip())
                     
         for tip in tipos:

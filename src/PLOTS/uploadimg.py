@@ -9,7 +9,7 @@ def plots_urls():
 
     load_dotenv()
 
-    files_to_upload = ['categories', 'markets', 'request_type', 'model_type', 'top_models']
+    files_to_upload = ['categories', 'markets', 'request_type', 'model_type', 'top_models', 'top_clients']
 
     urls = []
 

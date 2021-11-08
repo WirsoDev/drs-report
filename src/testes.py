@@ -1,14 +1,6 @@
 from dataCollector.datacollector import DataCollector
 
-data = DataCollector()
+data = DataCollector(isGlobal=False)
 
-models = data.getModels(IsSorted=True)
+print(data.getClients(IsSorted=True))
 
-top_models = {}
-
-for x, j in enumerate(models):
-    if x < 5:
-        d = {j[0]:j[1]}
-        top_models.update(d)
-
-print(top_models)

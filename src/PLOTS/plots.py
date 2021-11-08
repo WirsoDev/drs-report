@@ -124,6 +124,37 @@ def top_models(data):
     fig.write_image('./PLOTS/img/top_models.jpg', width=700, height=350, scale=6)
 
 
+def top_clients(data):
+
+    models = data.getClients(IsSorted=True)
+
+    data_markets = {}
+
+    for x, j in enumerate(models):
+        if x < 5:
+            d = {j[0]:j[1]}
+            data_markets.update(d)
+
+
+    x = []
+    y = []
+    for keys in data_markets.keys():
+        x.append(keys)
+    for values in data_markets.values():
+        y.append(values)
+    fig = px.bar(x=x, y=y)
+
+    fig.update_traces(texttemplate=y, textposition='inside')
+    fig.update_layout(uniformtext_minsize=2, uniformtext_mode='hide', font=dict(
+        family="Courier New, monospace",
+        size=8,
+        color="Black"
+    ))
+    #ploting and save images
+
+    fig.write_image('./PLOTS/img/top_clients.jpg', width=700, height=350, scale=6)
+
+
 
 
 def main(isglobal:bool = False):
@@ -133,5 +164,6 @@ def main(isglobal:bool = False):
     requesttype(data)
     type_models(data)
     top_models(data)
+    top_clients(data)
     print('Poling done!')
     
